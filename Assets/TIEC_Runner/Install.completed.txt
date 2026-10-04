@@ -1,0 +1,1 @@
+Build the gameplay scene using the existing open Grove map and validate it.

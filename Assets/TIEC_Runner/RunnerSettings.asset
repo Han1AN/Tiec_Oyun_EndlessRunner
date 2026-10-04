@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abbc063b7489ba14a9f16d6f0e65ae49, type: 3}
+  m_Name: RunnerSettings
+  m_EditorClassIdentifier: Assembly-CSharp::TIEC.Runner.RunnerConfig
+  targetSeconds: 30
+  courseLength: 217
+  speedMultiplier: 1.2
+  startWeight: 0.35
+  endWeight: 1.8
+  accelerationPower: 1.3
+  lateralSpeed: 8.5
+  roadHalfWidth: 5.6
+  visualLeanDegrees: 12
+  obstacleMask:
+    serializedVersion: 2
+    m_Bits: 256
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 512
