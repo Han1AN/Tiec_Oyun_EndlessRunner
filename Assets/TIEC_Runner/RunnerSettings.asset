@@ -15,7 +15,7 @@ MonoBehaviour:
   targetSeconds: 30
   courseLength: 217
   speedMultiplier: 1.2
-  startWeight: 0.35
+  startWeight: 0.4
   endWeight: 1.8
   accelerationPower: 1.3
   lateralSpeed: 8.5
