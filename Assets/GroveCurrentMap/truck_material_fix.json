@@ -1,0 +1,94 @@
+{
+  "materials": [
+    {
+      "name": "vehiclegeneric256",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "chassis_vlo",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "vehiclegeneric256_289d64",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "vehicletyres128",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "packer92wheel",
+      "texture": "User/b1ebe36e98_dft30.txd_packer92wheel_0.png",
+      "double_sided": true
+    },
+    {
+      "name": "packer92interior128",
+      "texture": "User/af582ea594_dft30.txd_packer92interior128_0.png",
+      "double_sided": true
+    },
+    {
+      "name": "vehiclegrunge256",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "carplate",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "chassis",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "vehiclelights128",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "vehiclelights128_9d46e5",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "packer92interior128_c257b3",
+      "texture": "User/af582ea594_dft30.txd_packer92interior128_0.png",
+      "double_sided": true
+    },
+    {
+      "name": "petro92interior128",
+      "texture": "User/461845fd39_dft30.txd_petro92interior128_0.png",
+      "double_sided": true
+    },
+    {
+      "name": "vehicledash32",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "vehiclesteering128",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "glass",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "Packer_Entry_Steel",
+      "texture": "",
+      "double_sided": true
+    },
+    {
+      "name": "rdtrain92interior128",
+      "texture": "User/eb70a5bc14_dft30.txd_rdtrain92interior128_0.png",
+      "double_sided": true
+    }
+  ]
+}

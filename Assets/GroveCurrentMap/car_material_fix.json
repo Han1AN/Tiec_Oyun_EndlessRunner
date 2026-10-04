@@ -1,0 +1,244 @@
+{
+  "materials": [
+    {
+      "name": "Greenwood_mat_0",
+      "texture": "Vehicles/Greenwood_primary_baseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_1",
+      "texture": "Vehicles/Greenwood_secondary_baseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_10",
+      "texture": "Vehicles/Greenwood_chassis_11_baseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_11",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_12",
+      "texture": "User/CarAlphaCorrect_66af8d252c.png",
+      "double_sided": true,
+      "alpha_corrected": true
+    },
+    {
+      "name": "Greenwood_mat_13",
+      "texture": "Vehicles/Greenwood_primary_001_baseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_14",
+      "texture": "Vehicles/Greenwood_primary_001_baseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_15",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_16",
+      "texture": "Vehicles/Greenwood_plate_ok_0_baseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_17",
+      "texture": "Vehicles/Greenwood_plate_ok_1_baseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_18",
+      "texture": "Vehicles/Greenwood_wheel_0_baseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_19",
+      "texture": "Vehicles/Greenwood_wheel_1_baseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_2",
+      "texture": "Vehicles/Greenwood_interior_baseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_3",
+      "texture": "Vehicles/Greenwood_primary_001_baseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_4",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_5",
+      "texture": "Vehicles/Greenwood_glass_baseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_6",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_7",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_8",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Greenwood_mat_9",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "OldCar_Blink_left",
+      "texture": "Vehicles/OldCar_BaseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "OldCar_Blink_right",
+      "texture": "Vehicles/OldCar_BaseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "OldCar_Body",
+      "texture": "Vehicles/OldCar_BaseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "OldCar_Fog_light",
+      "texture": "Vehicles/OldCar_BaseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "OldCar_glass",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "OldCar_Lights_front",
+      "texture": "Vehicles/OldCar_BaseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "OldCar_Lights_front_high",
+      "texture": "Vehicles/OldCar_BaseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "OldCar_Reverse_light",
+      "texture": "Vehicles/OldCar_BaseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "OldCar_TailLights",
+      "texture": "Vehicles/OldCar_BaseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Police_Black",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Police_BlueLight",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Police_Chrome",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Police_CreamPaint",
+      "texture": "Vehicles/Police_CreamPaint_BaseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Police_Dust",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Police_Glass",
+      "texture": "Vehicles/Police_Glass_BaseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Police_GreyPaint",
+      "texture": "Vehicles/Police_GreyPaint_BaseColor.png",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Police_LampGlass",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Police_RedLight",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Police_Rubber",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    },
+    {
+      "name": "Police_WhiteLight",
+      "texture": "",
+      "double_sided": true,
+      "alpha_corrected": false
+    }
+  ]
+}
