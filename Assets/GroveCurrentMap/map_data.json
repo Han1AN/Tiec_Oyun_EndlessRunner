@@ -1,6 +1,6 @@
 {
-  "source_snapshot": "C:\\Users\\ahmet\\Downloads\\AdamAsmaca\\TIEC Tanııtım Günleri\\MapSource\\UnityTransfer\\Blender_User_Final_20261005_175144.blend",
-  "source_sha256": "c1a2a594ae31b2c8fe5bd4e7ab8fbafa63681a321c2e10e77f9a96e7c010d438",
+  "source_snapshot": "C:\\Users\\ahmet\\Downloads\\AdamAsmaca\\TIEC Tanııtım Günleri\\MapSource\\UnityTransfer\\Blender_User_Final_20261005_193344.blend",
+  "source_sha256": "d6c1c5e109928d231884da8ad3ab32cf2d05145e3e7f24bdd2223a6b376292b6",
   "source_scene_objects": 3770,
   "source_visual_objects": 1452,
   "export_meshes": 171,
@@ -187,12 +187,12 @@
     },
     {
       "rgba": [
-        0.8199999928474426,
-        0.8100000023841858,
-        0.7099999785423279,
+        0.7400000095367432,
+        0.7200000286102295,
+        0.6299999952316284,
         1.0
       ],
-      "texture": "",
+      "texture": "White_SA.png",
       "roughness": 0.8700000047683716,
       "metallic": 0.0,
       "emission": 0,
@@ -867,12 +867,12 @@
     },
     {
       "rgba": [
+        0.08500000089406967,
+        0.2199999988079071,
         0.10000000149011612,
-        0.30000001192092896,
-        0.15000000596046448,
         1.0
       ],
-      "texture": "",
+      "texture": "Green_SA.png",
       "roughness": 0.8700000047683716,
       "metallic": 0.0,
       "emission": 0,
@@ -967,12 +967,12 @@
     },
     {
       "rgba": [
-        0.800000011920929,
-        0.800000011920929,
-        0.800000011920929,
+        1,
+        1,
+        1,
         1.0
       ],
-      "texture": "",
+      "texture": "User/BakedMix_57d2f13b94.png",
       "roughness": 0.8999999761581421,
       "metallic": 0.0,
       "emission": 0,
@@ -1027,12 +1027,12 @@
     },
     {
       "rgba": [
-        0.4300000071525574,
-        0.08500000089406967,
-        0.054999999701976776,
+        0.30000001192092896,
+        0.06499999761581421,
+        0.03500000014901161,
         1.0
       ],
-      "texture": "",
+      "texture": "Red_SA.png",
       "roughness": 0.8700000047683716,
       "metallic": 0.0,
       "emission": 0,
@@ -2794,10 +2794,12 @@
     "City/ATLAS_Buildings.png",
     "City/city_street_props_atlas.png",
     "Concrete_SA.png",
+    "Green_SA.png",
     "Palm/barkpalm.png",
     "Palm/date_palm_leaf.png",
     "Palm/frond_stem.png",
     "Palm/palm01.png",
+    "Red_SA.png",
     "User/00b24980ad_GreyStrip_Normal.png.png",
     "User/0747957d8d_copcarla.txd_black_0.png",
     "User/08ab148a05_copcarla.txd_vehicle_generic_tyrewallblack_0.png",
@@ -2827,6 +2829,7 @@
     "User/955321fb4d_barkpalm_normal.png.png",
     "User/96abf7c726_Image_2.png",
     "User/9c331a9cdd_SidewalkGround_albedo.jpg.png",
+    "User/BakedMix_57d2f13b94.png",
     "User/Cutout_05c6ea41da.png",
     "User/Cutout_09c6b4b9d4.png",
     "User/Cutout_0c84ab7b48.png",
@@ -2914,6 +2917,7 @@
     "Vehicles/Greenwood_wheel_0_baseColor.png",
     "Vehicles/Greenwood_wheel_1_baseColor.png",
     "Vehicles/OldCar_BaseColor.png",
+    "White_SA.png",
     "Wood_SA.png"
   ],
   "markers": [
@@ -34265,7 +34269,7 @@
           0.0,
           1.0,
           0.0,
-          216.0
+          213.35641479492188
         ],
         [
           0.0,

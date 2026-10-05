@@ -37,9 +37,9 @@ namespace TIEC.CurrentMap
    next=EditorApplication.timeSinceStartup+4;
    if(!File.Exists(Base+"/map_data.json")||!File.Exists(Base+"/apply.request"))return;
    var data=JsonUtility.FromJson<MapData>(File.ReadAllText(Base+"/map_data.json"));
-   if(File.Exists(Base+"/applied.sha")&&File.ReadAllText(Base+"/applied.sha")==data.source_sha256){EditorApplication.update-=Wait;return;}
+   if(File.Exists(Base+"/applied.sha")&&File.ReadAllText(Base+"/applied.sha")==data.source_sha256)return;
    if(!AssetDatabase.LoadAssetAtPath<GameObject>(Base+"/Models/Grove_Run_Environment.fbx")||!AssetDatabase.LoadAssetAtPath<GameObject>(Base+"/Models/Grove_Run_Collisions.fbx"))return;
-   try{Apply(data);EditorApplication.update-=Wait;}catch(Exception e){File.WriteAllText(Base+"/transfer_error.txt",e.ToString());Debug.LogException(e);}
+   try{Apply(data);}catch(Exception e){File.WriteAllText(Base+"/transfer_error.txt",e.ToString());Debug.LogException(e);}
   }
   [MenuItem("Tools/TIEC Map/Apply Current Blender Map to Gameplay")]
   public static void ApplyMenu(){Apply(JsonUtility.FromJson<MapData>(File.ReadAllText(Base+"/map_data.json")));}
@@ -142,3 +142,4 @@ namespace TIEC.CurrentMap
  }
 }
 #endif
+// trigger reload 10/05/2026 19:46:52
