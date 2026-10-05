@@ -20,12 +20,26 @@ namespace TIEC.Runner
         [SerializeField] Animator riderAnimator;
         [SerializeField] Transform frontWheel, rearWheel, crank;
         [SerializeField] Vector3 startPosition = new Vector3(0, .08f, -3);
+        // Retained for map-import compatibility. Flight follows physical support, not Z markers.
         [SerializeField] RunnerJump[] jumps;
+        const float GroundClearance = .05f;
+        const float GroundSnapDistance = .10f;
+        const float MaxStepUp = .20f;
+        const float MinSupportNormalY = .60f;
+        const float Gravity = 9.81f;
+        const float MaxLaunchRiseSpeed = 3f;
+        const float GroundSteeringAcceleration = 80f;
+        const float AirSteeringAcceleration = 30f;
+        const float MaxSubstepSeconds = 1f / 60f;
+        const float MaxSubstepTravel = .15f;
         Quaternion frontRest, rearRest, crankRest;
-        float wheelAngle;
-        int activeJump = -1;
-        float distance;
+        readonly Collider[] overlapResults = new Collider[1];
+        float wheelAngle, verticalVelocity, lateralVelocity, distance;
+        bool grounded;
         public float Distance => distance;
+        public bool Grounded => grounded;
+        public float VerticalVelocity => verticalVelocity;
+        public Collider LastObstacle { get; private set; }
         public float MinX => -settings.roadHalfWidth + hitbox.size.x * .5f;
         public float MaxX => settings.roadHalfWidth - hitbox.size.x * .5f;
         public void Configure(RunnerConfig config, RunnerInput controls, Transform pivot, Animator animator,
@@ -48,7 +62,8 @@ namespace TIEC.Runner
         }
         public void ResetToStart()
         {
-            distance = 0; activeJump = -1; wheelAngle = 0;
+            distance = 0; wheelAngle = 0; verticalVelocity = 0; lateralVelocity = 0;
+            grounded = true; LastObstacle = null;
             transform.SetPositionAndRotation(startPosition, Quaternion.Euler(0, 180, 0));
             if (body) { body.position = startPosition; body.rotation = transform.rotation; }
             if (visualPivot) visualPivot.localRotation = Quaternion.identity;
@@ -60,46 +75,84 @@ namespace TIEC.Runner
         }
         public bool Advance(float targetDistance, float steer, float deltaTime, float speed, out float fraction)
         {
-            Vector3 previous = body.position;
-            // Steering follows the bicycle's local right, which is world -X on this -Z course.
-            float lateralMove = (body.rotation * Vector3.right).x * steer * settings.lateralSpeed * deltaTime;
-            Vector3 next = new Vector3(Mathf.Clamp(previous.x + lateralMove, MinX, MaxX),
-                previous.y, startPosition.z - targetDistance);
-            UpdateHeight(previous, ref next);
-            Vector3 travel = next - previous;
-            Vector3 half = hitbox.size * .5f;
-            Vector3 center = previous + body.rotation * hitbox.center;
             fraction = 1;
-            // Sweep the entire step: thin hazards cannot be skipped at high speed or low frame rate.
-            if (Physics.CheckBox(center, half * .97f, body.rotation, settings.obstacleMask, QueryTriggerInteraction.Collide))
-                fraction = 0;
-            else if (travel.sqrMagnitude > .000001f && Physics.BoxCast(center, half * .97f, travel.normalized,
-                out RaycastHit hit, body.rotation, travel.magnitude, settings.obstacleMask, QueryTriggerInteraction.Collide))
-                fraction = Mathf.Clamp01(Mathf.Max(0, hit.distance - .01f) / travel.magnitude);
-            Vector3 final = Vector3.Lerp(previous, next, fraction);
-            // Physics queries and camera observe the same authoritative kinematic pose.
-            body.position = final;
-            transform.position = final;
-            distance = Mathf.Lerp(distance, targetDistance, fraction);
-            Animate(steer, speed, deltaTime);
-            return fraction >= 1;
-        }
-        void UpdateHeight(Vector3 previous, ref Vector3 next)
-        {
-            if (activeJump < 0 && jumps != null)
-                for (int i = 0; i < jumps.Length; i++)
-                    if (previous.z > jumps[i].takeoffZ && next.z <= jumps[i].takeoffZ
-                        && Mathf.Abs(next.x - jumps[i].laneX) < 1.28f) { activeJump = i; break; }
-            if (activeJump >= 0)
+            LastObstacle = null;
+            if (deltaTime <= 0) return true;
+            float initialDistance = distance;
+            float horizontalTravel = Mathf.Sqrt(Mathf.Pow(targetDistance - initialDistance, 2)
+                + Mathf.Pow(settings.lateralSpeed * deltaTime, 2));
+            int steps = Mathf.Max(1, Mathf.CeilToInt(Mathf.Max(deltaTime / MaxSubstepSeconds,
+                horizontalTravel / MaxSubstepTravel)));
+            float dt = deltaTime / steps;
+            Vector3 half = hitbox.size * .485f;
+            for (int step = 0; step < steps; step++)
             {
-                var jump = jumps[activeJump];
-                float t = Mathf.Clamp01((jump.takeoffZ - next.z) / (jump.takeoffZ - jump.landingZ));
-                next.y = Mathf.Lerp(jump.takeoffHeight, .08f, t) + Mathf.Sin(t * Mathf.PI) * jump.arcHeight;
-                if (t >= 1) activeJump = -1;
+                Vector3 previous = body.position;
+                float targetLateralVelocity = (body.rotation * Vector3.right).x * Mathf.Clamp(steer, -1, 1) * settings.lateralSpeed;
+                lateralVelocity = Mathf.MoveTowards(lateralVelocity, targetLateralVelocity,
+                    (grounded ? GroundSteeringAcceleration : AirSteeringAcceleration) * dt);
+                float nextDistance = Mathf.Lerp(initialDistance, targetDistance, (step + 1f) / steps);
+                Vector3 next = new Vector3(Mathf.Clamp(previous.x + lateralVelocity * dt, MinX, MaxX),
+                    previous.y, startPosition.z - nextDistance);
+                if (next.x <= MinX || next.x >= MaxX) lateralVelocity = 0;
+                UpdateHeight(previous, ref next, dt);
+                Vector3 travel = next - previous;
+                Vector3 center = previous + body.rotation * hitbox.center;
+                float localFraction = 1;
+                // Sweep every substep so thin walls still stop the faster rider.
+                if (Physics.OverlapBoxNonAlloc(center, half, overlapResults, body.rotation,
+                    settings.obstacleMask, QueryTriggerInteraction.Collide) > 0)
+                { localFraction = 0; LastObstacle = overlapResults[0]; }
+                else if (travel.sqrMagnitude > .000001f && Physics.BoxCast(center, half, travel.normalized,
+                    out RaycastHit hit, body.rotation, travel.magnitude, settings.obstacleMask, QueryTriggerInteraction.Collide))
+                {
+                    localFraction = Mathf.Clamp01(Mathf.Max(0, hit.distance - .01f) / travel.magnitude);
+                    LastObstacle = hit.collider;
+                }
+                Vector3 final = Vector3.Lerp(previous, next, localFraction);
+                body.position = final;
+                transform.position = final;
+                distance = Mathf.Lerp(distance, nextDistance, localFraction);
+                if (localFraction < 1)
+                {
+                    fraction = (step + localFraction) / steps;
+                    Animate(steer, speed, deltaTime * fraction);
+                    return false;
+                }
+            }
+            Animate(steer, speed, deltaTime);
+            return true;
+        }
+        void UpdateHeight(Vector3 previous, ref Vector3 next, float dt)
+        {
+            // A nearby probe can climb a continuous ramp, but cannot pull the rider onto a high adjacent lane.
+            Vector3 origin = new Vector3(next.x, previous.y + MaxStepUp, next.z);
+            bool supported = Physics.Raycast(origin, Vector3.down, out RaycastHit ground, 30f,
+                settings.groundMask, QueryTriggerInteraction.Ignore) && ground.normal.y >= MinSupportNormalY;
+            float supportHeight = supported ? ground.point.y + GroundClearance : float.NegativeInfinity;
+            float heightDifference = supportHeight - previous.y;
+            if (grounded && supported && heightDifference >= -GroundSnapDistance && heightDifference <= MaxStepUp)
+            {
+                next.y = supportHeight;
+                Vector3 horizontalVelocity = (next - previous) / dt;
+                verticalVelocity = -(ground.normal.x * horizontalVelocity.x + ground.normal.z * horizontalVelocity.z) / ground.normal.y;
                 return;
             }
-            if (Physics.Raycast(new Vector3(next.x, 5, next.z), Vector3.down, out RaycastHit ground, 6,
-                settings.groundMask, QueryTriggerInteraction.Ignore)) next.y = ground.point.y + .05f;
+            if (grounded)
+            {
+                grounded = false;
+                // Preserve ramp momentum with a modest rise above the edge (at most about 46 cm).
+                verticalVelocity = Mathf.Min(verticalVelocity, MaxLaunchRiseSpeed);
+            }
+            next.y = previous.y + verticalVelocity * dt - .5f * Gravity * dt * dt;
+            verticalVelocity -= Gravity * dt;
+            // Only descending contact lands the rider; the road cannot reset height while airborne.
+            if (supported && verticalVelocity <= 0 && previous.y >= supportHeight - .001f && next.y <= supportHeight)
+            {
+                next.y = supportHeight;
+                verticalVelocity = 0;
+                grounded = true;
+            }
         }
         void Animate(float steer, float speed, float dt)
         {

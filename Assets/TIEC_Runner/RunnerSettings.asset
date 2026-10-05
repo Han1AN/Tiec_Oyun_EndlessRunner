@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TIEC.Runner.RunnerConfig
   targetSeconds: 41.059906
   courseLength: 297
-  speedMultiplier: 1.2
-  startWeight: 0.4
+  speedMultiplier: 1.6
+  startWeight: 1
   endWeight: 1.8
   accelerationPower: 1.3
   lateralSpeed: 8.5

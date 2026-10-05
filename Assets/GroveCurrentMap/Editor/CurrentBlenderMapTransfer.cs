@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Newtonsoft.Json.Linq;
 namespace TIEC.CurrentMap
 {
  [Serializable] class MaterialData { public string name,texture,normal_texture,metallic_smoothness_texture; public float[] rgba; public float roughness,metallic,emission,normal_strength=1,ambient_emission; public bool alpha_clip,double_sided,transparent; }
@@ -89,8 +90,9 @@ namespace TIEC.CurrentMap
     else if(oldColliders.TryGetValue(f.name,out original)){f.gameObject.layer=original.gameObject.layer;c.enabled=original.enabled;}
     else if(f.name.Contains("Excavation")||f.name.StartsWith("COL_Vehicle_")||f.name.StartsWith("COL_Shopfront_Forecourt"))c.enabled=false;
     else if(c.bounds.max.y>.2f)f.gameObject.layer=obstacle;
-    if(c.enabled&&f.gameObject.layer==obstacle)f.gameObject.AddComponent<TIEC.Runner.RunnerHazard>();
+   if(c.enabled&&f.gameObject.layer==obstacle)f.gameObject.AddComponent<TIEC.Runner.RunnerHazard>();
    }
+   RepairFrontageColliders(root);
    // Existing marker references remain intact; only the old art and proxies are hidden.
    foreach(Transform child in old.transform)if(child.name=="Environment"||child.name.StartsWith("Collision Proxies")){Undo.RecordObject(child.gameObject,"Archive prior map geometry");child.gameObject.SetActive(false);}
    var motor=game.GetComponentInChildren<TIEC.Runner.BicycleMotor>(true);if(!motor)throw new InvalidOperationException("BicycleMotor missing.");
@@ -127,6 +129,47 @@ namespace TIEC.CurrentMap
    AssetDatabase.SaveAssets();EditorSceneManager.MarkSceneDirty(scene);if(!EditorSceneManager.SaveScene(scene))throw new IOException("Scene save failed.");
    File.WriteAllText(Base+"/transfer_result.json",JsonUtility.ToJson(result,true));File.WriteAllText(Base+"/applied.sha",data.source_sha256);
    Selection.activeGameObject=root;Debug.Log("CURRENT_BLENDER_MAP_TRANSFERRED: "+JsonUtility.ToJson(result));
+  }
+  // Blender exports frontage collision as world AABBs. Restore the rotated footprint
+  // so the boxes do not occupy the empty road corners beside the finish.
+  public static int RepairFrontageColliders(GameObject mapRoot) {
+   var transforms=(JArray)JObject.Parse(File.ReadAllText(Base+"/map_data.json"))["source_transforms"];
+   if(transforms==null)throw new InvalidOperationException("Building source transforms are missing.");
+   string folder=Base+"/Collisions";if(!AssetDatabase.IsValidFolder(folder))AssetDatabase.CreateFolder(Base,"Collisions");
+   int repaired=0;
+   foreach(var collider in mapRoot.GetComponentsInChildren<MeshCollider>(true)) {
+    if(collider.name!="COL_Extension_Frontage_1_1"&&collider.name!="COL_Extension_Frontage_-1_1")continue;
+    string name=collider.name.Substring(4);
+    var source=transforms.FirstOrDefault(t=>(string)t["name"]==name);
+    if(source==null)throw new InvalidOperationException("Missing source transform for "+name);
+    var matrix=source["matrix_world"];
+    float a=(float)matrix[0][0],b=(float)matrix[0][1],c=(float)matrix[1][0],d=(float)matrix[1][1];
+    var bounds=collider.bounds;
+    float denominator=Mathf.Abs(a*d)-Mathf.Abs(b*c);
+    if(Mathf.Abs(denominator)<.0001f)throw new InvalidOperationException("Cannot reconstruct footprint for "+name);
+    float ex=(bounds.extents.x*Mathf.Abs(d)-bounds.extents.z*Mathf.Abs(b))/denominator;
+    float ez=(bounds.extents.z*Mathf.Abs(a)-bounds.extents.x*Mathf.Abs(c))/denominator;
+    if(ex<=0||ez<=0)throw new InvalidOperationException("Invalid reconstructed footprint for "+name);
+    var vertices=new Vector3[8];
+    for(int i=0;i<4;i++) {
+     float u=(i==0||i==3)?-ex:ex,v=i<2?-ez:ez;
+     // Blender X/Y correspond to Unity -X/-Z in this imported map.
+     Vector3 world=new Vector3(bounds.center.x-a*u-b*v,bounds.min.y,bounds.center.z-c*u-d*v);
+     vertices[i]=collider.transform.InverseTransformPoint(world);
+     world.y=bounds.max.y;vertices[i+4]=collider.transform.InverseTransformPoint(world);
+    }
+    int[] triangles={0,1,2,0,2,3,4,6,5,4,7,6,0,4,5,0,5,1,1,5,6,1,6,2,2,6,7,2,7,3,3,7,4,3,4,0};
+    // InverseTransformPoint can reverse handedness through a mirrored model parent.
+    if((a*d-b*c)*collider.transform.localToWorldMatrix.determinant<0)
+     for(int i=0;i<triangles.Length;i+=3){int swap=triangles[i+1];triangles[i+1]=triangles[i+2];triangles[i+2]=swap;}
+    string path=folder+"/"+name+"_Oriented.asset";
+    var mesh=AssetDatabase.LoadAssetAtPath<Mesh>(path);
+    if(!mesh){mesh=new Mesh{name=name+"_Oriented"};AssetDatabase.CreateAsset(mesh,path);}
+    else {Undo.RecordObject(mesh,"Repair finish frontage");mesh.Clear();}
+    mesh.vertices=vertices;mesh.triangles=triangles;mesh.RecalculateNormals();mesh.RecalculateBounds();EditorUtility.SetDirty(mesh);
+    Undo.RecordObject(collider,"Repair finish frontage");collider.sharedMesh=null;collider.sharedMesh=mesh;EditorUtility.SetDirty(collider);repaired++;
+   }
+   return repaired;
   }
   static bool CheckEmptyStart(Vector3 start,TIEC.Runner.RunnerConfig config,BoxCollider box){for(float z=start.z;z>0;z-=.5f){var center=new Vector3(0,.08f,z)+Quaternion.Euler(0,180,0)*box.center;if(Physics.CheckBox(center,box.size*.485f,Quaternion.Euler(0,180,0),config.obstacleMask,QueryTriggerInteraction.Collide))return false;}return true;}
   static bool CheckFinalRoute(TIEC.Runner.RunnerConfig config,Vector3 start,BoxCollider box){
