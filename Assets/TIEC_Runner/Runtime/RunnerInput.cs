@@ -29,7 +29,7 @@ namespace TIEC.Runner
             foreach (var value in touchAxes.Values) axis += value;
             Steer = session.State == RunState.Running ? Mathf.Clamp(axis, -1, 1) : 0;
             if (session.State == RunState.Running || session.ResultAge < .65f && session.State == RunState.Result) return;
-            if (hud != null && hud.IsEditingName) return;
+            if (hud != null && (hud.IsCelebrating || hud.IsEditingName)) return;
             bool key = keyboard != null && keyboard.anyKey.wasPressedThisFrame;
             bool pointer = Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
             bool touch = Touchscreen.current != null && Touchscreen.current.primaryTouch.press.wasPressedThisFrame;

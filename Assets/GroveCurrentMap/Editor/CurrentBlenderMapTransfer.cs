@@ -93,6 +93,7 @@ namespace TIEC.CurrentMap
    if(c.enabled&&f.gameObject.layer==obstacle)f.gameObject.AddComponent<TIEC.Runner.RunnerHazard>();
    }
    RepairFrontageColliders(root);
+   TIEC.Runner.Editor.DartTargetRemoval.Apply(root);
    // Existing marker references remain intact; only the old art and proxies are hidden.
    foreach(Transform child in old.transform)if(child.name=="Environment"||child.name.StartsWith("Collision Proxies")){Undo.RecordObject(child.gameObject,"Archive prior map geometry");child.gameObject.SetActive(false);}
    var motor=game.GetComponentInChildren<TIEC.Runner.BicycleMotor>(true);if(!motor)throw new InvalidOperationException("BicycleMotor missing.");

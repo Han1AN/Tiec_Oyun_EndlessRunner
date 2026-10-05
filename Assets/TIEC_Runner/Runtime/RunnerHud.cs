@@ -38,6 +38,8 @@ namespace TIEC.Runner
         private readonly StringBuilder scoreText = new StringBuilder(256);
 
         public bool IsEditingName => nameField != null && nameField.isFocused;
+        public bool IsCelebrating => session != null && session.State == RunState.Result
+            && session.LastResult != null && session.LastResult.Completed && session.ResultAge < 2.5f;
 
         public void Configure(RunnerSession owner, RunnerInput controls,
             GameObject ready, GameObject running, GameObject result,
@@ -108,6 +110,11 @@ namespace TIEC.Runner
 
         private void Update()
         {
+            if (session != null && session.State == RunState.Result)
+            {
+                if (!IsCelebrating && resultPanel != null && !resultPanel.activeSelf) resultPanel.SetActive(true);
+                return;
+            }
             if (session == null || session.State != RunState.Running || Time.unscaledTime < nextHudRefresh) return;
             nextHudRefresh = Time.unscaledTime + 0.05f;
             RefreshRun();
@@ -118,7 +125,7 @@ namespace TIEC.Runner
             if (input != null) input.ClearSteering();
             if (readyPanel != null) readyPanel.SetActive(state == RunState.Ready);
             if (runningPanel != null) runningPanel.SetActive(state == RunState.Running);
-            if (resultPanel != null) resultPanel.SetActive(state == RunState.Result);
+            if (resultPanel != null) resultPanel.SetActive(state == RunState.Result && !IsCelebrating);
             if (readyTargetLabel != null) readyTargetLabel.text = $"{session.FinishDuration:0} SANİYE / TEK HAK";
             nextHudRefresh = 0f;
             if (state == RunState.Running) RefreshRun();
