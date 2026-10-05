@@ -1,12 +1,23 @@
 {
-    "source": "C:\\Users\\ahmet\\Downloads\\AdamAsmaca\\TIEC Tanııtım Günleri\\MapSource\\UnityTransfer\\Blender_User_Final_20261005_013525.blend",
+    "source": "C:\\Users\\ahmet\\Downloads\\AdamAsmaca\\TIEC Tanııtım Günleri\\MapSource\\UnityTransfer\\Blender_User_Final_20261005_175144.blend",
     "scene": "Assets/Scenes/GroveRunner_Game.unity",
-    "backup": "MapTransferBackups/GroveRunner_Game_Before_20261005_014216.unity",
-    "renderers": 168,
-    "colliders": 192,
+    "backup": "MapTransferBackups/GroveRunner_Game_Before_20261005_191226.unity",
+    "renderers": 171,
+    "colliders": 176,
     "truckModels": 7,
     "jumps": 7,
     "missingMaterials": 0,
     "missingScripts": 0,
-    "gameplayPreserved": true
+    "startBuildings": 1,
+    "finalObstacles": 9,
+    "holes": 4,
+    "gameplayPreserved": true,
+    "emptyStartClear": true,
+    "finalRouteClear": true,
+    "courseLength": 297.0,
+    "playerStart": {
+        "x": 0.0,
+        "y": 0.07999999821186066,
+        "z": 17.0
+    }
 }

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abbc063b7489ba14a9f16d6f0e65ae49, type: 3}
   m_Name: RunnerSettings
   m_EditorClassIdentifier: Assembly-CSharp::TIEC.Runner.RunnerConfig
-  targetSeconds: 30
-  courseLength: 217
+  targetSeconds: 41.059906
+  courseLength: 297
   speedMultiplier: 1.2
   startWeight: 0.4
   endWeight: 1.8
