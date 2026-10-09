@@ -169,3 +169,7 @@ Packages/packages-lock.json linguist-generated
 
 # Exceptions for .asset files such as lightning pre-baking
 LightingData.asset     binary
+
+# Keep the small README gallery directly in Git so GitHub renders it inline.
+docs/media/*.gif        -filter -diff -merge binary
+docs/media/*.jpg        -filter -diff -merge binary
